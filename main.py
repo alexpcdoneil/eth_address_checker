@@ -85,6 +85,7 @@ async def get_transaction_count(w3, address):
     transaction_count = await w3.eth.get_transaction_count(address)
     return transaction_count
   except Exception as e:
+    print('get_transaction_count', e)
     return None
 
 async def check_addr(w3, nodes, file_path):
@@ -106,6 +107,7 @@ async def check_addr(w3, nodes, file_path):
       current_node_index = (current_node_index + 1) % len(nodes)
       await asyncio.sleep(0)
     except (ValueError, Exception) as e:
+      print('check_addr', e)
       await asyncio.sleep(0)
 
 async def switch_node(w3, nodes):
@@ -117,6 +119,7 @@ async def switch_node(w3, nodes):
       await w3.eth.get_block('latest')
       return
     except Exception as e:
+      print('switch_node', e)
       current_node_index = (current_node_index + 1) % len(nodes)
   await asyncio.sleep(10)
 
@@ -126,7 +129,7 @@ async def main():
   nodes = load_list_from_file('nodes.txt')
   w3 = AsyncWeb3(AsyncWeb3.AsyncHTTPProvider(nodes[0]))
   
-  num_requests = 50
+  num_requests = 25
   file_path = 'results.txt'
   
   await check_addresses(w3, nodes, num_requests, file_path)
